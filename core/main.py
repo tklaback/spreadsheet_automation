@@ -46,17 +46,7 @@ def get_reviews(place_id: str) -> List[Review]:
         response = requests.get(review_url)
         response.raise_for_status()
 
-        reviews = response.json()['reviews']
-        list_of_reviews = [
-            Review(
-                author=review['authorAttribution']['displayName'],
-                rating=int(review['rating']),
-                time=review['publishTime'],
-                text=review['text']['text']
-            )
-            for review in reviews
-        ]
-        return list_of_reviews
+        data = response.json()
 
     except ConnectionError as ce:
         print(f"Connection Error occurred while getting review data: {ce}")
@@ -68,6 +58,19 @@ def get_reviews(place_id: str) -> List[Review]:
         print(f"Unexpected error occurred: {e}")
         return []
        
+    raw_reviews = data.get('reviews', [])
+
+    list_of_reviews = [
+        Review(
+            author=review.get('authorAttribution', {}).get('displayName'),
+            rating=int(review.get('rating')),
+            time=review.get('publishTime'),
+            text=review.get('text', {}).get('text')
+        )
+        for review in raw_reviews
+    ]
+
+    return list_of_reviews
 
 def update_values(spreadsheet_id, range_name, value_input_option, _values):
   """
