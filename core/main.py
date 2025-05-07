@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from typing import List
 from dataclasses import dataclass
 import requests
+from requests import HTTPError as RHTTPError, ConnectionError
 import os
 
 @dataclass
@@ -41,8 +42,32 @@ def get_reviews(place_id: str) -> List[Review]:
     api_key = os.getenv("API_KEY")
     review_url = f"https://places.googleapis.com/v1/places/{place_id}?fields=reviews&key={api_key}"
 
-    response = requests.get(review_url)
+    try:
+        response = requests.get(review_url)
+        response.raise_for_status()
 
+        reviews = response.json()['reviews']
+        list_of_reviews = [
+            Review(
+                author=review['authorAttribution']['displayName'],
+                rating=int(review['rating']),
+                time=review['publishTime'],
+                text=review['text']['text']
+            )
+            for review in reviews
+        ]
+        return list_of_reviews
+
+    except ConnectionError as ce:
+        print(f"Connection Error occurred while getting review data: {ce}")
+        return []
+    except RHTTPError as he:
+        print(f"HTTPError occurred while getting review data: {he}")
+        return []
+    except Exception as e:
+        print(f"Unexpected error occurred: {e}")
+        return []
+       
 
 def update_values(spreadsheet_id, range_name, value_input_option, _values):
   """
