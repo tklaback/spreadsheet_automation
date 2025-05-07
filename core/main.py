@@ -1,19 +1,18 @@
 import google.auth
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from google.oauth2 import service_account
+from google.oauth2.service_account import Credentials
 from dotenv import load_dotenv
+from typing import List
 import os
 
 
 load_dotenv(override=True)
 
-def get_values(spreadsheet_id: str, range_name: str):
-    creds = service_account.Credentials.from_service_account_file(
+def get_values(spreadsheet_id: str, range_name: str) -> List[List[str]]:
+
+    creds = Credentials.from_service_account_file(
         os.getenv("CREDENTIALS_PATH"))
-
-    service = build('sheets', 'v4', credentials=creds)
-
     try:
         service = build("sheets", "v4", credentials=creds)
 
@@ -23,9 +22,8 @@ def get_values(spreadsheet_id: str, range_name: str):
             .get(spreadsheetId=spreadsheet_id, range=range_name)
             .execute()
         )
-        rows = result.get("values", [])
-        print(f"{len(rows)} rows retrieved")
-        return result
+
+        return result.get("values", [])
     except HttpError as error:
         print(f"An error occurred: {error}")
         return error
