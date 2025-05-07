@@ -73,46 +73,47 @@ def get_reviews(place_id: str) -> List[Review]:
     return list_of_reviews
 
 def update_values(spreadsheet_id, range_name, value_input_option, _values):
-  """
-  Creates the batch_update the user has access to.
-  Load pre-authorized user credentials from the environment.
-  TODO(developer) - See https://developers.google.com/identity
-  for guides on implementing OAuth2 for the application.
-  """
-  creds, _ = google.auth.default()
-  # pylint: disable=maybe-no-member
-  try:
-    service = build("sheets", "v4", credentials=creds)
-    values = _values
-    body = {"values": values}
-    result = (
-        service.spreadsheets()
-        .values()
-        .update(
-            spreadsheetId=spreadsheet_id,
-            range=range_name,
-            valueInputOption=value_input_option,
-            body=body,
+    """
+    Creates the batch_update the user has access to.
+    Load pre-authorized user credentials from the environment.
+    TODO(developer) - See https://developers.google.com/identity
+    for guides on implementing OAuth2 for the application.
+    """
+    creds = Credentials.from_service_account_file(
+        os.getenv("CREDENTIALS_PATH"))
+    # pylint: disable=maybe-no-member
+    try:
+        service = build("sheets", "v4", credentials=creds)
+        values = _values
+        body = {"values": values}
+        result = (
+            service.spreadsheets()
+            .values()
+            .append(
+                spreadsheetId=spreadsheet_id,
+                range="Sheet1",
+                valueInputOption=value_input_option,
+                body=body,
+            )
+            .execute()
         )
-        .execute()
-    )
-    print(f"{result.get('updatedCells')} cells updated.")
-    return result
-  except HttpError as error:
-    print(f"An error occurred: {error}")
-    return error
+        print(f"{result.get('updatedCells')} cells updated.")
+        return result
+    except HttpError as error:
+        print(f"An error occurred: {error}")
+        return error
 
-
-# if __name__ == "__main__":
-#   # Pass: spreadsheet_id,  range_name, value_input_option and  _values
-#   update_values(
-#       os.getenv("SHEET_ID"),
-#       "A1:C2",
-#       "USER_ENTERED",
-#       [["A", "B"], ["C", "D"]],
-#   )
 
 if __name__ == "__main__":
+  # Pass: spreadsheet_id,  range_name, value_input_option and  _values
+  update_values(
+      os.getenv("SHEET_ID"),
+      "A1:C2",
+      "USER_ENTERED",
+      [["A", "B"], ["C", "D"]],
+  )
+
+# if __name__ == "__main__":
   # Pass: spreadsheet_id, and range_name
 #   get_locations(os.getenv("SHEET_ID"), "'Settings'!A2:B6")
-    get_reviews("ChIJHe7281r1UocRbjHXIVdRMcE")
+    # get_reviews("ChIJHe7281r1UocRbjHXIVdRMcE")
