@@ -5,9 +5,10 @@ from google.oauth2 import service_account
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
 
-def get_values(spreadsheet_id, range_name):
+load_dotenv(override=True)
+
+def get_values(spreadsheet_id: str, range_name: str):
     creds = service_account.Credentials.from_service_account_file(
         os.getenv("CREDENTIALS_PATH"))
 
