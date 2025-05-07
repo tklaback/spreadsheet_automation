@@ -1,5 +1,4 @@
 from core.main import get_values
-import pytest
 
 # def get_values(spreadsheet_id: str, range_name: str) -> List[List[str]]:
 
@@ -22,7 +21,7 @@ import pytest
 
 def test_get_values(mocker):
     mock_service_account_file = mocker.patch("core.main.Credentials.from_service_account_file", return_value="creds")
-    mock_os = mocker.patch("core.main.os.getenv", return_value="secret_title")
+    mocker.patch("core.main.os.getenv", return_value="secret_title")
 
     mock_service = mocker.Mock()
     mock_spreadsheets = mocker.Mock()
@@ -35,9 +34,10 @@ def test_get_values(mocker):
     mock_service.spreadsheets.return_value = mock_spreadsheets
 
     mock_build = mocker.patch("core.main.build", return_value=mock_service)
-    get_values("spreadsheet_id", "spread_sheet_name")
+    response = get_values("spreadsheet_id", "spread_sheet_name")
 
     mock_service_account_file.assert_called_once_with("secret_title")
-
+    mock_build.assert_called_once_with("sheets", "v4", credentials="creds")
+    assert response == [["location1_name", "location1_id"], ["location2_name", "location3_id"]]
 
 
