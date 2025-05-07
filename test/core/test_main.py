@@ -1,5 +1,4 @@
-from core.main import get_values
-from googleapiclient.errors import HttpError
+from core.main import get_locations
 import pytest
 
 # def get_values(spreadsheet_id: str, range_name: str) -> List[List[str]]:
@@ -31,7 +30,7 @@ def test_get_values_success(mock_os, mock_credentials_service_account_file, mock
     mock_service.spreadsheets.return_value = mock_spreadsheets
 
     mock_build = mocker.patch("core.main.build", return_value=mock_service)
-    response = get_values("spreadsheet_id", "spread_sheet_name")
+    response = get_locations("spreadsheet_id", "spread_sheet_name")
 
     mock_service_account_file.assert_called_once_with("secret_title")
     mock_build.assert_called_once_with("sheets", "v4", credentials="creds")

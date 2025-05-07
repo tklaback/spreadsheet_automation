@@ -4,12 +4,20 @@ from googleapiclient.errors import HttpError
 from google.oauth2.service_account import Credentials
 from dotenv import load_dotenv
 from typing import List
+from dataclasses import dataclass
+import requests
 import os
 
+@dataclass
+class Review:
+    author: str
+    rating: int
+    time: str
+    text: str
 
 load_dotenv(override=True)
 
-def get_values(spreadsheet_id: str, range_name: str) -> List[List[str]]:
+def get_locations(spreadsheet_id: str, range_name: str) -> List[List[str]]:
 
     creds = Credentials.from_service_account_file(
         os.getenv("CREDENTIALS_PATH"))
@@ -29,8 +37,12 @@ def get_values(spreadsheet_id: str, range_name: str) -> List[List[str]]:
         return error
 
 
-def get_reviews():
-   pass
+def get_reviews(place_id: str) -> List[Review]:
+    api_key = os.getenv("API_KEY")
+    review_url = f"https://places.googleapis.com/v1/places/{place_id}?fields=reviews&key={api_key}"
+
+    response = requests.get(review_url)
+
 
 def update_values(spreadsheet_id, range_name, value_input_option, _values):
   """
@@ -74,4 +86,5 @@ def update_values(spreadsheet_id, range_name, value_input_option, _values):
 
 if __name__ == "__main__":
   # Pass: spreadsheet_id, and range_name
-  get_values(os.getenv("SHEET_ID"), "'Settings'!A2:B6")
+#   get_locations(os.getenv("SHEET_ID"), "'Settings'!A2:B6")
+    get_reviews("ChIJHe7281r1UocRbjHXIVdRMcE")
