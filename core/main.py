@@ -8,6 +8,12 @@ from dataclasses import dataclass
 import requests
 from requests import HTTPError as RHTTPError, ConnectionError
 import os
+from returns.result import Result, Success, Failure
+
+load_dotenv(override=True)
+
+class Error:
+    pass
 
 @dataclass
 class Review:
@@ -16,9 +22,8 @@ class Review:
     time: str
     text: str
 
-load_dotenv(override=True)
 
-def get_locations(spreadsheet_id: str, range_name: str) -> List[List[str]]:
+def get_locations(spreadsheet_id: str, range_name: str) -> Result[List[List[str]], Error]:
 
     creds = Credentials.from_service_account_file(
         os.getenv("CREDENTIALS_PATH"))
@@ -32,15 +37,13 @@ def get_locations(spreadsheet_id: str, range_name: str) -> List[List[str]]:
             .execute()
         )
 
-        return result.get("values", [])
+        return Success(result.get("values", []))
     except HttpError as error:
-        print(f"An error occurred: {error}")
-        return error
+        return Failure(Error())
 
 
-def get_reviews(place_id: str) -> List[Review]:
-    api_key = os.getenv("API_KEY")
-    review_url = f"https://places.googleapis.com/v1/places/{place_id}?fields=reviews&key={api_key}"
+def get_reviews(place_id: str) -> Result[List[Review], Error]:
+    review_url = f"https://places.googleapis.com/v1/places/{place_id}?fields=reviews&key={os.getenv("API_KEY")}"
 
     try:
         response = requests.get(review_url)
@@ -50,13 +53,13 @@ def get_reviews(place_id: str) -> List[Review]:
 
     except ConnectionError as ce:
         print(f"Connection Error occurred while getting review data: {ce}")
-        return []
+        return Failure(Error())
     except RHTTPError as he:
         print(f"HTTPError occurred while getting review data: {he}")
-        return []
+        return Failure(Error())
     except Exception as e:
         print(f"Unexpected error occurred: {e}")
-        return []
+        return Failure(Error())
        
     raw_reviews = data.get('reviews', [])
 
@@ -70,9 +73,9 @@ def get_reviews(place_id: str) -> List[Review]:
         for review in raw_reviews
     ]
 
-    return list_of_reviews
+    return Success(list_of_reviews)
 
-def update_values(spreadsheet_id, range_name, value_input_option, _values):
+def update_values(spreadsheet_id, range_name, value_input_option, _values) -> Result[str, Error]:
     """
     Creates the batch_update the user has access to.
     Load pre-authorized user credentials from the environment.
@@ -97,23 +100,24 @@ def update_values(spreadsheet_id, range_name, value_input_option, _values):
             )
             .execute()
         )
-        print(f"{result.get('updatedCells')} cells updated.")
-        return result
+        Success(f"{result.get('updatedCells')} cells updated.")
     except HttpError as error:
         print(f"An error occurred: {error}")
-        return error
-
-
-if __name__ == "__main__":
-  # Pass: spreadsheet_id,  range_name, value_input_option and  _values
-  update_values(
-      os.getenv("SHEET_ID"),
-      "A1:C2",
-      "USER_ENTERED",
-      [["A", "B"], ["C", "D"]],
-  )
+        return Failure(Error())
 
 # if __name__ == "__main__":
-  # Pass: spreadsheet_id, and range_name
-#   get_locations(os.getenv("SHEET_ID"), "'Settings'!A2:B6")
-    # get_reviews("ChIJHe7281r1UocRbjHXIVdRMcE")
+#   # Pass: spreadsheet_id,  range_name, value_input_option and  _values
+#   update_values(
+#       os.getenv("SHEET_ID"),
+#       "A1:C2",
+#       "USER_ENTERED",
+#       [["A", "B"], ["C", "D"]],
+#   )
+
+# if __name__ == "__main__":
+# #   Pass: spreadsheet_id, and range_name
+# #   get_locations(os.getenv("SHEET_ID"), "'Settings'!A2:B6")
+#     get_reviews("ChIJHe7281r1UocRbjHXIVdRMcE")
+
+def main():
+    pass
