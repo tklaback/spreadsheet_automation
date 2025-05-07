@@ -1,27 +1,24 @@
 from core.main import get_values
+from googleapiclient.errors import HttpError
+import pytest
 
 # def get_values(spreadsheet_id: str, range_name: str) -> List[List[str]]:
 
-#     creds = Credentials.from_service_account_file(
-#         os.getenv("CREDENTIALS_PATH"))
-#     try:
-#         service = build("sheets", "v4", credentials=creds)
-
-#         result = (
-#             service.spreadsheets()
-#             .values()
-#             .get(spreadsheetId=spreadsheet_id, range=range_name)
-#             .execute()
-#         )
-
-#         return result.get("values", [])
 #     except HttpError as error:
 #         print(f"An error occurred: {error}")
 #         return error
 
-def test_get_values(mocker):
-    mock_service_account_file = mocker.patch("core.main.Credentials.from_service_account_file", return_value="creds")
+@pytest.fixture
+def mock_credentials_service_account_file(mocker):
+    return mocker.patch("core.main.Credentials.from_service_account_file", return_value="creds")
+
+@pytest.fixture
+def mock_os(mocker):
     mocker.patch("core.main.os.getenv", return_value="secret_title")
+
+def test_get_values_success(mock_os, mock_credentials_service_account_file, mocker):
+    mock_service_account_file = mock_credentials_service_account_file
+    mock_os
 
     mock_service = mocker.Mock()
     mock_spreadsheets = mocker.Mock()
@@ -41,3 +38,16 @@ def test_get_values(mocker):
     assert response == [["location1_name", "location1_id"], ["location2_name", "location3_id"]]
 
 
+# def test_get_values_failure(mock_os, mock_credentials_service_account_file, mocker):
+#     mock_service_account_file = mock_credentials_service_account_file
+#     mock_os
+
+#     def bad_execute():
+#         raise HttpError(resp=mocker.Mock(status=404), content=b"Not found")
+
+#     fake_service = mocker.Mock()
+#     mock_build = mocker.patch("core.main.build", return_value=fake_service)
+#     fake_service.spreadsheets.return_value.values.return_value.get.return_value.execute = bad_execute
+
+#     with pytest.raises(HttpError) as e:
+#         result = get_values("id", "range")
