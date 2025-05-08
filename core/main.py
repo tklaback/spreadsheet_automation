@@ -9,11 +9,17 @@ import requests
 from requests import HTTPError as RHTTPError, ConnectionError
 import os
 from returns.result import Result, Success, Failure
+from returns.pipeline import is_successful
+from returns.functions import not_
 
 load_dotenv(override=True)
 
+SETTINGS_SHEET_NAME = "Settings"
+LOCATIONS_RANGE = "A2:B6"
+
 class Error:
-    pass
+    def get_message():
+        pass
 
 @dataclass
 class Review:
@@ -120,4 +126,17 @@ def update_values(spreadsheet_id, range_name, value_input_option, _values) -> Re
 #     get_reviews("ChIJHe7281r1UocRbjHXIVdRMcE")
 
 def main():
-    pass
+    # 1) get locations
+    # 2) get reviews for each location
+    # 3) for each location, write the reviews
+
+    locations_result = get_locations(os.getenv("SHEET_ID"), f"'{SETTINGS_SHEET_NAME}'!{LOCATIONS_RANGE}")
+    if not_(is_successful)(locations_result):
+        print(locations_result.failure().get_message())
+        return
+
+    locations = locations_result.unwrap()
+
+    print(f"Grabbed {len(locations)} locations")
+
+main()
