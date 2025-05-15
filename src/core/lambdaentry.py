@@ -8,22 +8,29 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 def lambda_handler(event: str, context: str) -> dict[str, str|int]:
-    api_info: ReviewApiInfo = get_review_api_info()
+    try:
 
-    creds = Credentials.from_service_account_file(
-        os.getenv("CREDENTIALS_PATH"))
-    
-    spreadsheet_id = os.getenv("SHEET_ID")
-    assert spreadsheet_id, "SHEET_ID is a required environment variable"
+        api_info: ReviewApiInfo = get_review_api_info()
 
-    range = os.getenv("SHEET_NAME")
-    assert range, "SHEET_NAME is a required environment variable"
+        creds = Credentials.from_service_account_file(
+            os.getenv("CREDENTIALS_PATH"))
+        
+        spreadsheet_id = os.getenv("SHEET_ID")
+        assert spreadsheet_id, "SHEET_ID is a required environment variable"
 
-    ss = SpreadsheetInfo(spreadsheet_id=spreadsheet_id, range=range, value_input_option="USER_ENTERED")
-    append_reviews_to_google_sheets(api_info, ss, creds)
+        range = os.getenv("SHEET_NAME")
+        assert range, "SHEET_NAME is a required environment variable"
 
+        ss = SpreadsheetInfo(spreadsheet_id=spreadsheet_id, range=range, value_input_option="USER_ENTERED")
+        append_reviews_to_google_sheets(api_info, ss, creds)
 
-    return {
-        "statusCode": 200,
-        "body": ""
-    }
+        return {
+            "statusCode": 200,
+            "body": ""
+        }
+
+    except Exception as e:
+        return {
+            "statusCode": 500,
+            "body": str(e)
+        }
