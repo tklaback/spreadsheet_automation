@@ -4,8 +4,12 @@ import boto3 # type: ignore
 import boto3.session
 from botocore.exceptions import ClientError
 import requests
-from core.datastructs import ReviewApiInfo
-from core.businessreviews import fetch_business_reviews
+from core.datastructs import ReviewApiInfo, SpreadsheetInfo
+from appendreviews import append_reviews_to_google_sheets
+from google.oauth2.service_account import Credentials
+import os
+from dotenv import load_dotenv
+load_dotenv(override=True)
 
 # Secrets Manager helper
 def get_google_secrets() -> dict[str, str]:
@@ -15,8 +19,8 @@ def get_google_secrets() -> dict[str, str]:
         "client_id": "...",
         "client_secret": "...",
         "refresh_token": "...",
-        "account_id": "your-accounts/123456",
-        "location_id": "locations/7890"
+        "account_id": "...",
+        "location_id": "..."
       }
     """
     secret_name = os.environ["GOOGLE_SECRET_NAME"]
@@ -74,9 +78,21 @@ def get_review_api_info() -> ReviewApiInfo:
 
 def lambda_handler(event: str, context: str) -> dict[str, str|int]:
     api_info: ReviewApiInfo = get_review_api_info()
-    reviews = fetch_business_reviews(api_info)
+
+    creds = Credentials.from_service_account_file(
+        os.getenv("CREDENTIALS_PATH"))
+    
+    spreadsheet_id = os.getenv("SHEET_ID")
+    assert spreadsheet_id, "SHEET_ID is a required environment variable"
+
+    range = os.getenv("SHEET_NAME")
+    assert range, "SHEET_NAME is a required environment variable"
+
+    ss = SpreadsheetInfo(spreadsheet_id=spreadsheet_id, range=range, value_input_option="USER_ENTERED")
+    append_reviews_to_google_sheets(api_info, ss, creds)
+
 
     return {
         "statusCode": 200,
-        "body": json.dumps(reviews)
+        "body": ""
     }

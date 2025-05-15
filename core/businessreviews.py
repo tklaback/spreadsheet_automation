@@ -4,9 +4,9 @@ from typing import Generator
 from datastructs import Review
 from constants import RATING_MAPPING
 
-def fetch_business_reviews(data: ReviewApiInfo) -> Generator[Review]:
-    url = f"https://businessprofile.googleapis.com/v1/{data.account_id}/{data.location_id}/reviews"
-    headers = {"Authorization": f"Bearer {data.access_token}"}
+def fetch_business_reviews(api_info: ReviewApiInfo) -> Generator[Review]:
+    url = f"https://businessprofile.googleapis.com/v1/{api_info.account_id}/{api_info.location_id}/reviews"
+    headers = {"Authorization": f"Bearer {api_info.access_token}"}
     params = {}
 
     while True:

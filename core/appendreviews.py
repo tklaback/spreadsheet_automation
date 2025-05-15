@@ -2,17 +2,11 @@ from datastructs import ReviewApiInfo, SpreadsheetInfo
 from businessreviews import fetch_business_reviews
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from google.oauth2.service_account import Credentials
-import os
-from dotenv import load_dotenv
-load_dotenv(override=True)
 
 
-def append_reviews_to_google_sheets(data: ReviewApiInfo, ss: SpreadsheetInfo):
-    reviews = [review.convert_to_list() for review in fetch_business_reviews(data)]
+def append_reviews_to_google_sheets(api_info: ReviewApiInfo, ss: SpreadsheetInfo, creds):
+    reviews = [review.convert_to_list() for review in fetch_business_reviews(api_info)]
 
-    creds = Credentials.from_service_account_file(
-        os.getenv("CREDENTIALS_PATH"))
     # pylint: disable=maybe-no-member
     try:
         service = build("sheets", "v4", credentials=creds)
