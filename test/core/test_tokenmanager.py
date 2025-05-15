@@ -4,7 +4,7 @@ import pytest
 import boto3
 from moto import mock_aws
 from botocore.exceptions import ClientError
-from src.core.tokenmanager import get_google_secrets, refresh_access_token
+from src.core.tokenmanager import get_google_secrets, refresh_access_token, get_review_api_info
 import requests
 
 @mock_aws
@@ -98,3 +98,42 @@ def test_refresh_access_token_missing_token(mocker):
 
     with pytest.raises(KeyError, match="access_token"):
         refresh_access_token("client-id", "client-secret", "refresh-token")
+
+# def get_review_api_info() -> ReviewApiInfo:
+#     secrets = get_google_secrets()
+#     assert isinstance(secrets, dict)
+
+#     client_id     = secrets["client_id"]
+#     client_secret = secrets["client_secret"]
+#     refresh_token = secrets["refresh_token"]
+#     account_id    = secrets["account_id"]
+#     location_id   = secrets["location_id"]
+
+#     access_token = refresh_access_token(client_id, client_secret, refresh_token)
+
+#     return ReviewApiInfo(
+#         account_id=account_id,
+#         location_id=location_id,
+#         access_token=access_token
+#     )
+
+def test_get_review_api_info(mocker):
+    google_secrets = {
+        "client_id": "client-id",
+        "client_secret": "client-secret",
+        "refresh_token": "refresh-token",
+        "account_id" : "account_id",
+        "location_id": "location_id"
+    }
+
+    mock_google_secrets_fn = mocker.patch("src.core.tokenmanager.get_google_secrets", return_value = google_secrets)
+    mock_refresh_access_token_fn = mocker.patch("src.core.tokenmanager.refresh_access_token", return_value = "test_token")
+
+    result = get_review_api_info()
+
+    assert result.access_token == "test_token"
+    assert result.location_id == "location_id"
+    assert result.account_id == "account_id"
+
+    mock_google_secrets_fn.assert_called_once()
+    mock_refresh_access_token_fn.assert_called_once_with("client-id", "client-secret", "refresh-token")
