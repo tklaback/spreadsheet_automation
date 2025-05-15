@@ -1,5 +1,5 @@
 from datastructs import ReviewApiInfo, SpreadsheetInfo
-from businessreviews import fetch_business_reviews
+from src.core.businessreviews import fetch_business_reviews
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 

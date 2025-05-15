@@ -1,5 +1,5 @@
 import requests
-from core.datastructs import ReviewApiInfo
+from src.core.datastructs import ReviewApiInfo
 from typing import Generator
 from datastructs import Review
 from constants import RATING_MAPPING

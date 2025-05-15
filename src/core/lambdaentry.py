@@ -1,8 +1,8 @@
 import os
-from core.datastructs import ReviewApiInfo, SpreadsheetInfo
-from appendreviews import append_reviews_to_google_sheets
+from src.core.datastructs import ReviewApiInfo, SpreadsheetInfo
+from src.core.appendreviews import append_reviews_to_google_sheets
 from google.oauth2.service_account import Credentials
-from tokenmanager import get_review_api_info
+from src.core.tokenmanager import get_review_api_info
 import os
 from dotenv import load_dotenv
 load_dotenv(override=True)

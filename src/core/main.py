@@ -118,24 +118,3 @@ if __name__ == "__main__":
       "USER_ENTERED",
       [["A", "B"], ["C", "D"]],
   )
-
-# if __name__ == "__main__":
-# #   Pass: spreadsheet_id, and range_name
-# #   get_locations(os.getenv("SHEET_ID"), "'Settings'!A2:B6")
-#     get_reviews("ChIJHe7281r1UocRbjHXIVdRMcE")
-
-# def main():
-    # 1) get locations
-    # 2) get reviews for each location
-    # 3) for each location, write the reviews
-
-    # locations_result = get_locations(os.getenv("SHEET_ID"), f"'{SETTINGS_SHEET_NAME}'!{LOCATIONS_RANGE}")
-    # if not_(is_successful)(locations_result):
-    #     print(locations_result.failure().get_message())
-    #     return
-
-    # locations = locations_result.unwrap()
-
-    # print(f"Grabbed {len(locations)} locations")
-
-# main()

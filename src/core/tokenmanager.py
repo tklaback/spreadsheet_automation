@@ -4,8 +4,7 @@ import boto3 # type: ignore
 import boto3.session
 from botocore.exceptions import ClientError
 import requests
-from core.datastructs import ReviewApiInfo, SpreadsheetInfo
-from appendreviews import append_reviews_to_google_sheets
+from src.core.datastructs import ReviewApiInfo, SpreadsheetInfo
 from google.oauth2.service_account import Credentials
 import os
 from dotenv import load_dotenv
