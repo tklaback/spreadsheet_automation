@@ -1,21 +1,27 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "spreadsheet-automation"
-version = "0.1.0"
-description = ""
-authors = [
-    {name = "Your Name",email = "you@example.com"}
-]
+name = "bpmn-cwp-verify"
+description = "A tool to verify that workflow implements a cognitive work problem"
+version = "0.0.1"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "requests (>=2.32.3,<3.0.0)"
+  "returns",
+  "requests",
+  "boto3",
+  "google-oauth2-tool",
+  "google-api-python-client",
+  "dotenv",
 ]
 
 
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3.5"
-
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "pytest-mock",
+  "pytest-cov",
+  "moto[ec2,s3,all]"
+  ]

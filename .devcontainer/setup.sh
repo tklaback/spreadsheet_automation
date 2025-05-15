@@ -3,7 +3,9 @@
 # Upgrade pip
 pip install --upgrade pip
 
-pip install poetry
+
+# Upgrade pip
+pip install --upgrade pip
 
 # Install the package
-poetry install --no-root
+pip install --user --editable ".[dev]"
