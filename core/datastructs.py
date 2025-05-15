@@ -13,3 +13,12 @@ class Review:
     rating: int
     time: str
     comment: str
+
+    def convert_to_list(self) -> list:
+        return [self.id, self.author, self.rating, self.time, self.comment]
+
+@dataclass
+class SpreadsheetInfo:
+    spreadsheet_id: str
+    range: str
+    value_input_option: str
