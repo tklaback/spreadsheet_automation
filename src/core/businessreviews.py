@@ -1,10 +1,9 @@
 import requests
-from src.core.datastructs import ReviewApiInfo
-from typing import Generator
-from datastructs import Review
-from constants import RATING_MAPPING
+from src.core.datastructs import ReviewApiInfo, Review
+from typing import Iterable
+from src.core.constants import RATING_MAPPING
 
-def fetch_business_reviews(api_info: ReviewApiInfo) -> Generator[Review]:
+def fetch_business_reviews(api_info: ReviewApiInfo) -> Iterable[Review]:
     url = f"https://businessprofile.googleapis.com/v1/{api_info.account_id}/{api_info.location_id}/reviews"
     headers = {"Authorization": f"Bearer {api_info.access_token}"}
     params = {}
