@@ -1,6 +1,8 @@
 import os
 import json
 import boto3 # type: ignore
+import boto3.session
+from botocore.exceptions import ClientError
 import requests
 from core.dataclasses import ReviewApiInfo
 from core.businessreviews import fetch_business_reviews
@@ -18,10 +20,24 @@ def get_google_secrets() -> dict[str, str]:
       }
     """
     secret_name = os.environ["GOOGLE_SECRET_NAME"]
-    region = os.environ.get("AWS_REGION", "us-east-1")
-    client = boto3.client("secretsmanager", region_name=region) # type: ignore
-    resp = client.get_secret_value(SecretId=secret_name) # type: ignore
-    return json.loads(resp["SecretString"]) # type: ignore
+    region_name = os.environ.get("AWS_REGION", "us-east-1")
+
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        # For a list of exceptions thrown, see
+        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+        raise e
+
+    return json.loads(get_secret_value_response['SecretString'])
 
 def refresh_access_token(client_id: str, client_secret: str, refresh_token: str):
     """
