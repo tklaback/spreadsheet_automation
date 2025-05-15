@@ -4,7 +4,8 @@ import pytest
 import boto3
 from moto import mock_aws
 from botocore.exceptions import ClientError
-from src.core.tokenmanager import get_google_secrets
+from src.core.tokenmanager import get_google_secrets, refresh_access_token
+import requests
 
 @mock_aws
 def test_get_google_secrets_success():
@@ -58,3 +59,42 @@ def test_get_google_secrets_success_with_client_error(mocker):
 
     with pytest.raises(ClientError) as e:
         get_google_secrets()
+
+def test_refresh_access_token_success(mocker):
+    mock_response = mocker.Mock()
+    mock_response.raise_for_status.return_value = None
+    mock_response.json.return_value = {"access_token": "new-token-123"}
+
+    mock_post = mocker.patch("src.core.tokenmanager.requests.post", return_value=mock_response)
+
+    token = refresh_access_token("client-id", "client-secret", "refresh-token")
+
+    assert token == "new-token-123"
+    mock_post.assert_called_once_with(
+        "https://oauth2.googleapis.com/token",
+        data={
+            "client_id": "client-id",
+            "client_secret": "client-secret",
+            "refresh_token": "refresh-token",
+            "grant_type": "refresh_token",
+        }
+    )
+
+def test_refresh_access_token_http_error(mocker):
+    mock_response = mocker.Mock()
+    mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError("401 Unauthorized")
+
+    mocker.patch("src.core.tokenmanager.requests.post", return_value=mock_response)
+
+    with pytest.raises(requests.exceptions.HTTPError, match="401 Unauthorized"):
+        refresh_access_token("client-id", "client-secret", "refresh-token")
+
+def test_refresh_access_token_missing_token(mocker):
+    mock_response = mocker.Mock()
+    mock_response.raise_for_status.return_value = None
+    mock_response.json.return_value = {}
+
+    mocker.patch("src.core.tokenmanager.requests.post", return_value=mock_response)
+
+    with pytest.raises(KeyError, match="access_token"):
+        refresh_access_token("client-id", "client-secret", "refresh-token")
