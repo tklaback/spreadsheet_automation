@@ -4,7 +4,7 @@ import boto3 # type: ignore
 import boto3.session
 from botocore.exceptions import ClientError
 import requests
-from core.dataclasses import ReviewApiInfo
+from core.datastructs import ReviewApiInfo
 from core.businessreviews import fetch_business_reviews
 
 # Secrets Manager helper
