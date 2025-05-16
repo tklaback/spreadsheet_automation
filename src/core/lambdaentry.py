@@ -7,7 +7,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv(override=True)
 
-def lambda_handler(event: str, context: str) -> dict[str, str|int]:
+def lambda_handler(event: dict, context: dict) -> dict[str, str|int]:
     try:
 
         api_info: ReviewApiInfo = get_review_api_info()
