@@ -1,10 +1,6 @@
-[build-system]
-requires = ["setuptools >= 77.0.3"]
-build-backend = "setuptools.build_meta"
-
 [project]
-name = "bpmn-cwp-verify"
-description = "A tool to verify that workflow implements a cognitive work problem"
+name = "google aggregator"
+description = "A tool for gathering company reviews"
 version = "0.0.1"
 readme = "README.md"
 requires-python = ">=3.12"
