@@ -97,7 +97,7 @@ def update_values(spreadsheet_id, range_name, value_input_option, _values) -> Re
         result = (
             service.spreadsheets()
             .values()
-            .append(
+            .update(
                 spreadsheetId=spreadsheet_id,
                 range="Sheet1",
                 valueInputOption=value_input_option,
@@ -116,5 +116,5 @@ if __name__ == "__main__":
       os.getenv("SHEET_ID"),
       "A1:C2",
       "USER_ENTERED",
-      [["A", "B"], ["C", "D"]],
+      [["A", "B"], ["C", "F"]],
   )

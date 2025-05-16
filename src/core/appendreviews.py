@@ -1,7 +1,6 @@
 from src.core.datastructs import ReviewApiInfo, SpreadsheetInfo
 from src.core.businessreviews import fetch_business_reviews
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
+import requests
 
 
 def append_reviews_to_google_sheets(api_info: ReviewApiInfo, ss: SpreadsheetInfo, creds):
@@ -9,21 +8,26 @@ def append_reviews_to_google_sheets(api_info: ReviewApiInfo, ss: SpreadsheetInfo
 
     # pylint: disable=maybe-no-member
     try:
-        service = build("sheets", "v4", credentials=creds)
-        values = reviews
-        body = {"values": values}
-        result = (
-            service.spreadsheets()
-            .values()
-            .append(
-                spreadsheetId=ss.spreadsheet_id,
-                range=ss.range,
-                valueInputOption=ss.value_input_option,
-                body=body,
-            )
-            .execute()
-        )
-        return f"{result.get('updatedCells')} cells updated."
-    except HttpError as error:
+        url = f"https://sheets.googleapis.com/v4/spreadsheets/{ss.spreadsheet_id}/values/{ss.range}"
+        clear_url = f"https://sheets.googleapis.com/v4/spreadsheets/{ss.spreadsheet_id}/values/{ss.range}:Z:clear"
+        headers = {
+            "Authorization": f"Bearer {creds.token}",
+            "Content-Type": "application/json"
+        }
+
+        clear_response = requests.post(clear_url, headers=headers)
+        clear_response.raise_for_status()
+
+        data = {
+            "values": reviews
+        }
+        params = {
+            "valueInputOption": ss.value_input_option
+        }
+        response = requests.post(url, headers=headers, params=params, json=data)
+        response.raise_for_status()
+        return response.json()
+        
+    except requests.exceptions.HTTPError as error:
         print(f"An error occurred: {error}")
         raise error

@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  MyDependenciesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: my-dependencies
+      Description: Dependencies for my Lambda function
+      ContentUri: layers/dependencies
+      CompatibleRuntimes:
+        - python3.12
+
+  MyLambdaHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src.core.lambdaentry.lambda_handler
+      Runtime: python3.12
+      CodeUri: .
+      Layers:
+        - !Ref MyDependenciesLayer

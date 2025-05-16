@@ -1,4 +1,3 @@
-import os
 import json
 import boto3 # type: ignore
 import boto3.session
@@ -6,12 +5,9 @@ from botocore.exceptions import ClientError
 import requests
 from src.core.datastructs import ReviewApiInfo, SpreadsheetInfo
 from google.oauth2.service_account import Credentials
-import os
-from dotenv import load_dotenv
-load_dotenv(override=True)
 
 # Secrets Manager helper
-def get_google_secrets() -> dict[str, str]:
+def get_google_secrets(secret_name: str, region_name: str) -> dict[str, str]:
     """
     Expects an AWS Secrets Manager secret whose SecretString is JSON with keys:
       {
@@ -22,8 +18,6 @@ def get_google_secrets() -> dict[str, str]:
         "location_id": "..."
       }
     """
-    secret_name = os.environ["GOOGLE_SECRET_NAME"]
-    region_name = os.environ.get("AWS_REGION", "us-east-1")
 
     session = boto3.session.Session()
     client = session.client(
@@ -57,8 +51,8 @@ def refresh_access_token(client_id: str, client_secret: str, refresh_token: str)
     r.raise_for_status()
     return r.json()["access_token"]
 
-def get_review_api_info() -> ReviewApiInfo:
-    secrets = get_google_secrets()
+def get_review_api_info(google_secret_name: str, region_name: str) -> ReviewApiInfo:
+    secrets = get_google_secrets(google_secret_name, region_name)
     assert isinstance(secrets, dict)
 
     client_id     = secrets["client_id"]
