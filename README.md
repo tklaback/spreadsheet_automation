@@ -57,3 +57,17 @@ To run tests:
 
 ```bash
 python3 -m pytest
+```
+
+
+## How to get account_id and location_id:
+
+- GET this endpoint  
+  `https://mybusinessbusinessinformation.googleapis.com/v1/accounts`  
+  ^^ then copy the number (i.e. `12345`) from the response: (i.e. `account/12345`)
+
+- Then get the location id(s):  
+  `https://mybusinessbusinessinformation.googleapis.com/v1/accounts/<account_number_from_above>/locations?readMask=name`
+
+- Then, finally:  
+  `https://mybusiness.googleapis.com/v4/accounts/{accountId}/locations/{locationId}/reviews`
