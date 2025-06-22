@@ -1,7 +1,7 @@
 import pytest
 import os
 from unittest.mock import Mock
-from src.core.lambdaentry import lambda_handler
+from core.lambda.lambdaentry import lambda_handler
 
 
 def test_lambda_handler_success(mocker):

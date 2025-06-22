@@ -2,9 +2,9 @@
 
 import pytest
 import requests
-from src.core.datastructs import Review
+from core.models.datastructs import Review
 from types import SimpleNamespace
-from src.core.businessreviews import fetch_business_reviews
+from core.service.fetchreviews import fetch_business_reviews
 
 
 @pytest.fixture

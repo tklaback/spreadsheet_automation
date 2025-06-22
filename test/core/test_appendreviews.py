@@ -1,7 +1,7 @@
 import pytest
 from googleapiclient.errors import HttpError
 from types import SimpleNamespace
-from src.core.appendreviews import append_reviews_to_google_sheets
+from core.service.appendreviewsservice import append_reviews_to_google_sheets
 
 
 @pytest.fixture

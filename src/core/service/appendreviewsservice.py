@@ -1,5 +1,5 @@
-from src.core.datastructs import ReviewApiInfo, SpreadsheetInfo
-from src.core.businessreviews import fetch_business_reviews
+from core.models.datastructs import ReviewApiInfo, SpreadsheetInfo
+from core.service.fetchreviews import fetch_business_reviews
 import requests
 
 

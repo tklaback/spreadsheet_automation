@@ -1,7 +1,7 @@
 import requests
-from src.core.datastructs import ReviewApiInfo, Review
+from core.models.datastructs import ReviewApiInfo, Review
 from typing import Iterable
-from src.core.constants import RATING_MAPPING
+from core.utils.constants import RATING_MAPPING
 
 def fetch_business_reviews(api_info: ReviewApiInfo) -> Iterable[Review]:
     url = f"https://mybusiness.googleapis.com/v4/accounts/{api_info.account_id}/locations/{api_info.location_id}/reviews"
