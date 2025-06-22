@@ -1,4 +1,4 @@
-from src.core.utils.getenvvar import get_required_os_var
+from core.utils.getenvvar import get_required_os_var
 
 def entry(event: dict, context: dict) -> dict[str, str|int]:
     try:
