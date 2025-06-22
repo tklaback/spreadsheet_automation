@@ -1,9 +1,11 @@
 from core.utils.getenvvar import get_required_os_var
+from core.service.authservice import AuthService
 
 def handler(event: dict, context: dict) -> dict[str, str|int]:
     try:
-        secret_name = get_required_os_var("GOOGLE_SECRET_NAME")
         # creds = load_credentials()
+
+        AuthService.build(["https://www.googleapis.com/auth/business.manage"])
         
         # spreadsheet_id = get_required_os_var("SHEET_ID")
         # range = get_required_os_var("SHEET_NAME")

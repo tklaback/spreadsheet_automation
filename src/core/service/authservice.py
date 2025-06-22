@@ -1,9 +1,8 @@
 import os
 import time
-import requests
 from dataclasses import dataclass
 from dotenv import load_dotenv
-from typing import ClassVar
+from core.service.networkservice import Network
 
 load_dotenv()
 
@@ -40,13 +39,13 @@ class AuthService:
             "scope": " ".join(scopes),
         }
 
-        try:
-            response = requests.post("https://accounts.google.com/o/oauth2/v2/auth", data=form)
-            response.raise_for_status()
-            data = response.json()
-        except requests.RequestException as e:
-            print("Failed to obtain access token:", e)
-            raise
+        response = Network.build_request(
+            {
+                "url": "https://accounts.google.com/o/oauth2/v2/auth",
+                "data": form
+            }
+        )
+        data = response.json()
 
         now_secs = int(time.time())
         expire_time = now_secs + int(data["expires_in"])
