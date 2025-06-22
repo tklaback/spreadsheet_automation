@@ -13,6 +13,7 @@ class Network:
                     url=config.get("url"),
                     headers=config.get("headers"),
                     params=config.get("params"),
+                    json=config.get("json"),
                     data=config.get("data"),
                     timeout=config.get("timeout", 10)
                 )
