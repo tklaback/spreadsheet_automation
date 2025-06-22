@@ -1,11 +1,4 @@
-from core.models.datastructs import ReviewApiInfo, SpreadsheetInfo
-from core.service.appendreviewsservice import append_reviews_to_google_sheets
-from google.oauth2.service_account import Credentials
-from src.core.tokenmanager import get_review_api_info
-from google.auth.transport.requests import Request
-import os
-
-
+from src.core.utils.getenvvar import get_required_os_var
 
 def entry(event: dict, context: dict) -> dict[str, str|int]:
     try:
