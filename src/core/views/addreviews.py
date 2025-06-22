@@ -5,7 +5,7 @@ def handler(event: dict, context: dict) -> dict[str, str|int]:
     try:
         # creds = load_credentials()
 
-        AuthService.build(["https://www.googleapis.com/auth/business.manage"])
+        AuthService.build()
         
         # spreadsheet_id = get_required_os_var("SHEET_ID")
         # range = get_required_os_var("SHEET_NAME")

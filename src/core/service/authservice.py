@@ -3,6 +3,7 @@ import time
 from dataclasses import dataclass
 from dotenv import load_dotenv
 from core.service.networkservice import Network
+from core.utils.getenvvar import get_required_os_var
 
 load_dotenv()
 
@@ -19,33 +20,32 @@ class AuthService:
         return int(time.time()) >= self.expire_time
 
     @staticmethod
-    def build(scopes: list[str]) -> "AuthService":
+    def build() -> "AuthService":
+        """
+        Exchanges a refresh_token for a new access_token.
+        """
         if AuthService.__instance and not AuthService.__instance.is_expired():
             return AuthService.__instance
 
-        client_id = os.getenv("CLIENT_ID")
-        client_secret = os.getenv("CLIENT_SECRET")
+        client_id = get_required_os_var("CLIENT_ID")
+        client_secret = get_required_os_var("CLIENT_SECRET")
+        refresh_token = get_required_os_var("REFRESH_TOKEN")
 
-        if not client_id or not client_secret:
-            raise ValueError("Uber Client ID and Client Secret must be set in environment variables.")
-
-        if not isinstance(scopes, list) or not scopes:
-            raise ValueError("Scopes must be a non-empty list.")
-
-        form = {
-            "client_id": client_id,
+        token_url = "https://oauth2.googleapis.com/token"
+        payload = {
+            "client_id":     client_id,
             "client_secret": client_secret,
-            "grant_type": "client_credentials",
-            "scope": " ".join(scopes),
+            "refresh_token": refresh_token,
+            "grant_type":    "refresh_token",
         }
-
-        response = Network.build_request(
+        r = Network.build_request(
             {
-                "url": "https://accounts.google.com/o/oauth2/v2/auth",
-                "data": form
+                "url": token_url,
+                "data": payload
             }
         )
-        data = response.json()
+
+        data = r.json()
 
         now_secs = int(time.time())
         expire_time = now_secs + int(data["expires_in"])
