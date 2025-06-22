@@ -3,6 +3,7 @@ import time
 import requests
 from dataclasses import dataclass
 from dotenv import load_dotenv
+from typing import ClassVar
 
 load_dotenv()
 
@@ -13,8 +14,16 @@ class AuthService:
     expire_time: int
     scope: str
 
+    __instance = None
+
+    def is_expired(self) -> bool:
+        return int(time.time()) >= self.expire_time
+
     @staticmethod
     def build(scopes: list[str]) -> "AuthService":
+        if AuthService.__instance and not AuthService.__instance.is_expired():
+            return AuthService.__instance
+
         client_id = os.getenv("CLIENT_ID")
         client_secret = os.getenv("CLIENT_SECRET")
 
@@ -43,9 +52,12 @@ class AuthService:
         expire_time = now_secs + int(data["expires_in"])
 
         print("Successfully obtained access token")
-        return AuthService(
+
+        AuthService.__instance = AuthService(
             access_token=data["access_token"],
             token_type=data["token_type"],
             expire_time=expire_time,
             scope=data["scope"]
         )
+
+        return AuthService.__instance
