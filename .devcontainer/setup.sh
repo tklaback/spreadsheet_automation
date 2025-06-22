@@ -4,8 +4,4 @@
 pip install --upgrade pip
 
 
-# Upgrade pip
-pip install --upgrade pip
-
-# Install the package
-pip install --user --editable ".[dev]"
+pip install -r ./requirements.txt
