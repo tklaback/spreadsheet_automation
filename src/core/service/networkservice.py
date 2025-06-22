@@ -12,9 +12,11 @@ class Network:
                     method=config.get("method"),
                     url=config.get("url"),
                     headers=config.get("headers"),
+                    params=config.get("params"),
                     data=config.get("data"),
                     timeout=config.get("timeout", 10)
                 )
+
                 response.raise_for_status()
                 return response
             except requests.exceptions.RequestException as err:

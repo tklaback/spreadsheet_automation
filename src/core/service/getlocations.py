@@ -3,13 +3,13 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.oauth2.service_account import Credentials
 from typing import List
-import os
 from returns.result import Result, Success, Failure
+from src.core.utils.getenvvar import get_required_os_var
 
 def get_locations(spreadsheet_id: str, range_name: str) -> Result[List[List[str]], Error]:
 
     creds = Credentials.from_service_account_file(
-        os.getenv("CREDENTIALS_PATH"))
+        get_required_os_var("CREDENTIALS_PATH"))
     try:
         service = build("sheets", "v4", credentials=creds)
 

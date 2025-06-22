@@ -1,7 +1,7 @@
-import requests
 from core.models.datastructs import ReviewApiInfo, Review
 from typing import Iterable
 from core.utils.constants import RATING_MAPPING
+from core.service.networkservice import Network
 
 def fetch_business_reviews(api_info: ReviewApiInfo) -> Iterable[Review]:
     url = f"https://mybusiness.googleapis.com/v4/accounts/{api_info.account_id}/locations/{api_info.location_id}/reviews"
@@ -9,12 +9,14 @@ def fetch_business_reviews(api_info: ReviewApiInfo) -> Iterable[Review]:
     params = {}
 
     while True:
-        response = requests.get(
-            url,
-            headers=headers,
-            params=params
+
+        response = Network.build_request(
+            {
+                "url": url,
+                "headers": headers,
+                "params": params
+            }
         )
-        response.raise_for_status()
         page = response.json()
 
         for review_data in page.get('reviews', []):
