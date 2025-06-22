@@ -3,18 +3,9 @@ from core.service.appendreviewsservice import append_reviews_to_google_sheets
 from google.oauth2.service_account import Credentials
 from src.core.tokenmanager import get_review_api_info
 from google.auth.transport.requests import Request
-import json
 import os
 
-def load_credentials():
-    pass
 
-def get_required_os_var(env_var_name: str) -> str:
-    value = os.environ.get(env_var_name)
-
-    assert value, f"{value} is a required environment variable"
-
-    return value
 
 def entry(event: dict, context: dict) -> dict[str, str|int]:
     try:
