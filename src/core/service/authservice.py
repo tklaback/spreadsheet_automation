@@ -40,6 +40,7 @@ class AuthService:
         }
         r = Network.build_request(
             {
+                "method": "POST",
                 "url": token_url,
                 "data": payload
             }

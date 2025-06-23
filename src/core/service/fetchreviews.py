@@ -12,6 +12,7 @@ def fetch_business_reviews(api_info: ReviewApiInfo) -> Iterable[Review]:
 
         response = Network.build_request(
             {
+                "method": "GET",
                 "url": url,
                 "headers": headers,
                 "params": params

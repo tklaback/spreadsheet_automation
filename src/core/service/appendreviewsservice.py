@@ -15,6 +15,7 @@ def append_reviews_to_google_sheets(api_info: ReviewApiInfo, ss: SpreadsheetInfo
 
     Network.build_request(
         {
+            "method": "POST",
             "url": clear_url,
             "headers": headers
         }
@@ -28,6 +29,7 @@ def append_reviews_to_google_sheets(api_info: ReviewApiInfo, ss: SpreadsheetInfo
     }
     response = Network.build_request(
         {
+            "method": "POST",
             "url": url, 
             "headers":headers, 
             "params":params,

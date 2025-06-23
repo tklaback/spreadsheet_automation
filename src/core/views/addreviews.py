@@ -5,7 +5,9 @@ def handler(event: dict, context: dict) -> dict[str, str|int]:
     try:
         # creds = load_credentials()
 
-        AuthService.build()
+        auth_service = AuthService.build()
+
+        access_token = auth_service.access_token
         
         # spreadsheet_id = get_required_os_var("SHEET_ID")
         # range = get_required_os_var("SHEET_NAME")
