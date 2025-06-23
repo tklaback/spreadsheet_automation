@@ -1,15 +1,35 @@
+from core.service.networkservice import Network
 
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-from google.oauth2.service_account import Credentials
-from typing import List
-from returns.result import Result, Success, Failure
-from core.utils.getenvvar import get_required_os_var
-from core.models.error import Error
+def get_locations(auth_token: str, account_number: str) -> list[str]:
+    url = f"https://mybusinessbusinessinformation.googleapis.com/v1/accounts/{account_number}/locations?readMask=name"
+    response = Network.build_request({
+        "url": url,
+        "method": "GET",
+        "headers": {
+            f"Bearer {auth_token}"
+        }
+    })
 
-def get_locations(auth_token):
-    pass
+    locations = response.json().get("locations", [])
 
-def get_account(auth_token):
-    pass
+    return [locObj["name"].split('/')[1] for locObj in locations]
+
+def get_account(auth_token: str) -> str:
+    url = "https://mybusinessbusinessinformation.googleapis.com/v1/accounts"
+
+    response = Network.build_request({
+        "url": url,
+        "method": "GET",
+        "headers": {
+            f"Bearer {auth_token}"
+        }
+    })
+
+    accounts = response.json().get("accounts", [])
+
+    for account_obj in accounts:
+        account_num = account_obj["name"].split("/")[1]
+        if get_locations(auth_token, account_num):
+            return account_num
     
+    raise Exception("No account number works")
