@@ -3,8 +3,13 @@ from core.service.fetchreviews import fetch_business_reviews
 from core.service.networkservice import Network
 
 
-def append_reviews_to_google_sheets(api_info: ReviewApiInfo, ss: SpreadsheetInfo, creds):
-    reviews = [review.convert_to_list() for review in fetch_business_reviews(api_info)]
+def append_reviews_to_google_sheets(locations: list[str], account_id: str, access_token: str, ss: SpreadsheetInfo, creds):
+    reviews = [
+        review.convert_to_list()
+        for location_id in locations
+        for review in fetch_business_reviews(ReviewApiInfo(account_id, location_id, access_token))
+    ]
+
 
     url = f"https://sheets.googleapis.com/v4/spreadsheets/{ss.spreadsheet_id}/values/{ss.range}"
     clear_url = f"https://sheets.googleapis.com/v4/spreadsheets/{ss.spreadsheet_id}/values/{ss.range}:Z:clear"
