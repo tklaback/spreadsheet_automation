@@ -6,7 +6,7 @@ def get_locations(access_token: str, account_number: str) -> list[str]:
         "url": url,
         "method": "GET",
         "headers": {
-            f"Bearer {access_token}"
+            "Authorization": f"Bearer {access_token}"
         }
     })
 
@@ -21,7 +21,7 @@ def get_account(access_token: str) -> str:
         "url": url,
         "method": "GET",
         "headers": {
-            f"Bearer {access_token}"
+            "Authorization": f"Bearer {access_token}"
         }
     })
 
