@@ -5,7 +5,7 @@ from core.models.datastructs import SpreadsheetInfo
 from core.service.appendreviewsservice import append_reviews_to_google_sheets
 from core.service.sscredsservice import load_credentials
 
-def handler(event: dict, context: dict) -> dict[str, str|int]:
+def handler() -> dict[str, str|int]:
     try:
         creds = load_credentials()
 
@@ -32,3 +32,5 @@ def handler(event: dict, context: dict) -> dict[str, str|int]:
             "statusCode": 500,
             "body": str(e)
         }
+
+handler()
