@@ -1,9 +1,9 @@
-from core.utils.getenvvar import get_required_os_var
-from core.service.authservice import AuthService
-from core.service.getaccountlocations import get_account, get_locations
-from core.models.datastructs import SpreadsheetInfo
-from core.service.appendreviewsservice import append_reviews_to_google_sheets
-from core.service.sscredsservice import load_credentials
+from src.core.utils.getenvvar import get_required_os_var
+from src.core.service.authservice import AuthService
+from src.core.service.getaccountlocations import get_account, get_locations
+from src.core.models.datastructs import SpreadsheetInfo
+from src.core.service.appendreviewsservice import append_reviews_to_google_sheets
+from src.core.service.sscredsservice import load_credentials
 
 def handler() -> dict[str, str|int]:
     try:

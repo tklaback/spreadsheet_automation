@@ -1,9 +1,8 @@
-import os
 import time
 from dataclasses import dataclass
 from dotenv import load_dotenv
-from core.service.networkservice import Network
-from core.utils.getenvvar import get_required_os_var
+from src.core.service.networkservice import Network
+from src.core.utils.getenvvar import get_required_os_var
 
 load_dotenv()
 

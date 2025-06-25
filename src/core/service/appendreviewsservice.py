@@ -1,6 +1,6 @@
-from core.models.datastructs import ReviewApiInfo, SpreadsheetInfo
-from core.service.fetchreviews import fetch_business_reviews
-from core.service.networkservice import Network
+from src.core.models.datastructs import ReviewApiInfo, SpreadsheetInfo
+from src.core.service.fetchreviews import fetch_business_reviews
+from src.core.service.networkservice import Network
 
 
 def append_reviews_to_google_sheets(

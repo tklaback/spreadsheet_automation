@@ -1,6 +1,6 @@
 from google.oauth2.service_account import Credentials
 from google.auth.transport.requests import Request
-from core.utils.getenvvar import get_required_os_var
+from src.core.utils.getenvvar import get_required_os_var
 import json
 import base64
 

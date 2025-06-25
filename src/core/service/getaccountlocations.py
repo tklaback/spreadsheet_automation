@@ -1,4 +1,4 @@
-from core.service.networkservice import Network
+from src.core.service.networkservice import Network
 
 def get_locations(access_token: str, account_number: str) -> list[str]:
     url = f"https://mybusinessbusinessinformation.googleapis.com/v1/accounts/{account_number}/locations?readMask=name"
