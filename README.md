@@ -72,11 +72,6 @@ python3 -m pytest
 - Then, finally:  
   `https://mybusiness.googleapis.com/v4/accounts/{accountId}/locations/{locationId}/reviews`
 
-# Google Sheets Review Uploader
-
-A simple tool to write reviews into a Google Sheet via the Sheets API. Follow the instructions below to set up your service account and configure the required environment variables.
-
----
 
 ## 1. Service Account Setup
 
