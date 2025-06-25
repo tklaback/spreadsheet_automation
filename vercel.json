@@ -1,8 +1,6 @@
 {
-  "cron": [
-    {
-      "path": "api/addreviews",
-      "schedule": "0 12 * * 1"
-    }
-  ]
+  "crons": [{
+    "path": "api/addreviews",
+    "schedule": "0 12 * * 1"
+  }]
 }

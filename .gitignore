@@ -6,3 +6,4 @@ credentials.json
 layers/
 .vscode/
 **/*.egg-info/**
+.vercel
