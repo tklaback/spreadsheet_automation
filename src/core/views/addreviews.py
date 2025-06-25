@@ -21,6 +21,7 @@ def handler() -> dict[str, str|int]:
         range = get_required_os_var("SHEET_NAME")
         ss = SpreadsheetInfo(spreadsheet_id=spreadsheet_id, range=range, value_input_option="USER_ENTERED")
         append_reviews_to_google_sheets(locations, account_id, access_token, ss, creds)
+        print("Successfully added reviews to spreadsheet.")
 
         return {
             "statusCode": 200,
@@ -28,6 +29,7 @@ def handler() -> dict[str, str|int]:
         }
 
     except Exception as e:
+        print(f"Error occurred during process: {e.args[0]}")
         return {
             "statusCode": 500,
             "body": str(e)

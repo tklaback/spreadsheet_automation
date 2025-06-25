@@ -21,6 +21,7 @@ class Network:
                 response.raise_for_status()
                 return response
             except requests.exceptions.RequestException as err:
+                print(f"Error in network: {err.response}")
                 status = getattr(err.response, 'status_code', None)
                 attempt += 1
 

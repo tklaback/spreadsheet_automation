@@ -16,4 +16,6 @@ def load_credentials():
     )
 
     credentials.refresh(Request())
+
+    print("Retrieved credentials for service account.")
     return credentials

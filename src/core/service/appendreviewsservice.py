@@ -17,6 +17,7 @@ def append_reviews_to_google_sheets(
         for review in fetch_business_reviews(ReviewApiInfo(account_id, location_id, access_token))
     ]
 
+    print(f"Retrieved {len(reviews)} reviews")
 
     url = f"https://sheets.googleapis.com/v4/spreadsheets/{ss.spreadsheet_id}/values/{ss.range}"
     clear_url = f"https://sheets.googleapis.com/v4/spreadsheets/{ss.spreadsheet_id}/values/{ss.range}:Z:clear"
@@ -33,6 +34,8 @@ def append_reviews_to_google_sheets(
         }
     )
 
+    print("Cleared spreadsheet successfully")
+
     data = {
         "values": reviews
     }
@@ -48,6 +51,8 @@ def append_reviews_to_google_sheets(
             "json": data
         }
     )
+
+    print("Uploaded reviews to spreadsheet")
 
     return response.json()
         

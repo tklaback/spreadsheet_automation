@@ -11,6 +11,7 @@ def get_locations(access_token: str, account_number: str) -> list[str]:
     })
 
     locations = response.json().get("locations", [])
+    print(f"Retrieved {len(locations)} locations.")
 
     return [locObj["name"].split('/')[1] for locObj in locations]
 
@@ -30,6 +31,7 @@ def get_account(access_token: str) -> str:
     for account_obj in accounts:
         account_num = account_obj["name"].split("/")[1]
         if get_locations(access_token, account_num):
+            print("Retrieved account")
             return account_num
     
     raise Exception("No account number works")

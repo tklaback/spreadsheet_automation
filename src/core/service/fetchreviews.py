@@ -20,6 +20,8 @@ def fetch_business_reviews(api_info: ReviewApiInfo) -> Iterable[Review]:
         )
         page = response.json()
 
+        print("Retrieved page of reviews")
+
         for review_data in page.get('reviews', []):
             review = Review(
                 id=review_data.get('reviewId', 'n/a'),
