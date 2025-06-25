@@ -1,4 +1,4 @@
-from src.core.views.addreviews import handler
+from src.core.views import addreviews
 import os
 
 def app(request):
@@ -11,4 +11,4 @@ def app(request):
             "body": "Unauthorized"
         }
 
-    return handler()
+    return addreviews.handler()
