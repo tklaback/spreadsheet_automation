@@ -32,5 +32,3 @@ def handler() -> dict[str, str|int]:
             "statusCode": 500,
             "body": str(e)
         }
-
-handler()
