@@ -3,7 +3,14 @@ from core.service.fetchreviews import fetch_business_reviews
 from core.service.networkservice import Network
 
 
-def append_reviews_to_google_sheets(locations: list[str], account_id: str, access_token: str, ss: SpreadsheetInfo, creds):
+def append_reviews_to_google_sheets(
+        locations: list[str],
+        account_id: str,
+        access_token: str,
+        ss: SpreadsheetInfo,
+        creds
+    ):
+
     reviews = [
         review.convert_to_list()
         for location_id in locations
@@ -34,13 +41,13 @@ def append_reviews_to_google_sheets(locations: list[str], account_id: str, acces
     }
     response = Network.build_request(
         {
-            "method": "POST",
+            "method": "PUT",
             "url": url, 
-            "headers":headers, 
-            "params":params,
-            "json":data
+            "headers": headers, 
+            "params": params,
+            "json": data
         }
     )
-    response.raise_for_status()
+
     return response.json()
         
