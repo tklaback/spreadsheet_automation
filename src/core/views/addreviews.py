@@ -17,6 +17,5 @@ def handler():
     
     
     spreadsheet_id = get_required_os_var("SHEET_ID")
-    range = get_required_os_var("SHEET_NAME")
-    ss = SpreadsheetInfo(spreadsheet_id=spreadsheet_id, range=range, value_input_option="USER_ENTERED")
+    ss = SpreadsheetInfo(spreadsheet_id=spreadsheet_id, value_input_option="USER_ENTERED")
     append_reviews_to_google_sheets(locations, account_id, access_token, ss, creds)

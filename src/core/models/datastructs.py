@@ -23,5 +23,4 @@ class Review:
 @dataclass
 class SpreadsheetInfo:
     spreadsheet_id: str
-    range: str
     value_input_option: str
