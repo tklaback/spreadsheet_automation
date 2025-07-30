@@ -17,7 +17,7 @@ def append_reviews_to_google_sheets(
 
     location_reviews = {}
 
-    for location_id in [locations[0]]:
+    for location_id in locations:
         location_name = location_mapping.get(location_id, "Unknown Location")
         if not location_name:
             print(f"Warning: No display name found for location ID {location_id}. Using 'Unknown Location'.")
